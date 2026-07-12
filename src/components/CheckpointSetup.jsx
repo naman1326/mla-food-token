@@ -1,7 +1,16 @@
 import { useState, useEffect } from 'react'
 import { fetchCheckpoints } from '../supabaseClient.js'
+import logo from '../assets/logo.png'
 
-export default function CheckpointSetup({ onChoose }) {
+const CHECKPOINT_MAPPING = {
+  entry: 'ENTRY',
+  plate: 'PLATE',
+  drink: 'DRINK',
+  chaat: 'CHAT',
+  sweet: 'SWEET'
+}
+
+export default function CheckpointSetup({ username, onChoose, onLogout }) {
   const [checkpoints, setCheckpoints] = useState(null)
   const [error, setError] = useState(null)
   const [selected, setSelected] = useState(null)
@@ -9,9 +18,24 @@ export default function CheckpointSetup({ onChoose }) {
 
   useEffect(() => {
     fetchCheckpoints()
-      .then(setCheckpoints)
+      .then((data) => {
+        const formatted = data.map(cp => {
+          if (cp.code === 'CHAT') {
+            return { ...cp, label: 'Chaat' }
+          }
+          return cp
+        })
+
+        const allowedCode = CHECKPOINT_MAPPING[username]
+        const filtered = formatted.filter(cp => cp.code === allowedCode)
+
+        setCheckpoints(filtered)
+        if (filtered.length === 1) {
+          setSelected(filtered[0])
+        }
+      })
       .catch(() => setError('Could not load counters — check your connection and reload'))
-  }, [])
+  }, [username])
 
   function confirm() {
     if (!selected) return
@@ -20,6 +44,9 @@ export default function CheckpointSetup({ onChoose }) {
 
   return (
     <div className="setup-screen">
+      <div className="brand-logo-container">
+        <img src={logo} alt="Club Logo" className="brand-logo" />
+      </div>
       <p className="eyebrow">Food Pass — Volunteer Scanner</p>
       <h1>Which counter is this?</h1>
 
@@ -55,6 +82,12 @@ export default function CheckpointSetup({ onChoose }) {
       <button type="button" className="primary-button" disabled={!selected} onClick={confirm}>
         Start scanning
       </button>
+
+      {onLogout && (
+        <button type="button" className="link-button logout-adjust" onClick={onLogout}>
+          Back to login
+        </button>
+      )}
     </div>
   )
 }

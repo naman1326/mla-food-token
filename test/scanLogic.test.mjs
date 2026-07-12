@@ -66,4 +66,10 @@ check('formatScanTime on missing input returns empty, not "Invalid Date"',
   ''
 )
 
+check(
+  'confirmed scan for Chat maps to Chaat',
+  interpretScanResult({ status: 'confirmed', name: 'Demo Participant 1', checkpoint: 'Chat' }),
+  { tone: 'confirm', headline: 'CONFIRMED', name: 'Demo Participant 1', detail: 'Chaat' }
+)
+
 console.log(`\n${passed}/${passed} checks passed`)

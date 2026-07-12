@@ -1,15 +1,25 @@
 :root {
-  --ink: #10152a;
-  --ink-2: #1b2444;
-  --ink-3: #262f57;
-  --marigold: #f0a63a;
-  --paper: #f7f2e7;
+  /* Rich, warm, culture-rich theme with warm heritage accents */
+  --ink: #1a0808; /* Deep rich Maharashtrian mahogany dark background */
+  --ink-2: #2d1212; /* Lighter deep red-brown cards */
+  --ink-3: #4a1c1c; /* Border/active elements */
+  
+  --marigold: #FF6B35; /* Vibrant Saffron/Orange accent from styling guide */
+  --marigold-hover: #ea580c;
+  
+  --brand-red: #D62424; /* Marathi Identity Red */
+  --brand-red-hover: #B01E1E; /* Hover Accent Red */
+  
+  --paper: #fff7ed; /* Warm beige primary text */
+  --white: #ffffff;
+  
   --confirm: #1fae5f;
   --confirm-deep: #0f7a41;
-  --duplicate: #e2493a;
-  --duplicate-deep: #a92e22;
-  --error: #d97706;
-  --font-display: 'Bebas Neue', sans-serif;
+  --duplicate: #D62424; /* Marathi Identity Red */
+  --duplicate-deep: #991b1b;
+  --error: #ea580c; /* Alt Saffron */
+  
+  --font-display: 'Yatra One', 'Bebas Neue', sans-serif;
   --font-body: 'Manrope', system-ui, sans-serif;
 }
 
@@ -25,7 +35,7 @@ body,
 }
 
 body {
-  background: var(--ink);
+  background: linear-gradient(135deg, var(--ink) 0%, #0d0303 100%);
   color: var(--paper);
   font-family: var(--font-body);
   -webkit-tap-highlight-color: transparent;
@@ -41,6 +51,29 @@ button:focus-visible,
 input:focus-visible {
   outline: 3px solid var(--marigold);
   outline-offset: 2px;
+}
+
+/* ---------- Brand Logo & Layout ---------- */
+
+.brand-logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.brand-logo {
+  height: 60px; /* Appropriately sized for Android device */
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 10px rgba(255, 107, 53, 0.25));
+}
+
+.scanner-logo-adjust {
+  margin-bottom: 0;
+  padding-top: 16px;
 }
 
 /* ---------- Fatal / setup screens ---------- */
@@ -72,19 +105,22 @@ input:focus-visible {
   font-weight: 700;
   color: var(--marigold);
   margin: 0 0 8px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .setup-screen h1 {
   font-family: var(--font-display);
-  font-size: 40px;
+  font-size: 32px;
   letter-spacing: 0.02em;
-  margin: 0 0 28px;
-  line-height: 1.05;
+  margin: 0 0 24px;
+  line-height: 1.2;
+  color: var(--paper);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .setup-loading,
 .setup-error {
-  color: rgb(247 242 231 / 70%);
+  color: rgb(255 247 237 / 70%);
 }
 
 .setup-error {
@@ -94,26 +130,55 @@ input:focus-visible {
 .checkpoint-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 28px;
+  gap: 16px;
+  margin-bottom: 24px;
 }
 
 .checkpoint-card {
   background: var(--ink-2);
   border: 2px solid var(--ink-3);
-  border-radius: 14px;
+  border-radius: 18px;
   color: var(--paper);
   font-family: var(--font-body);
   font-weight: 700;
-  font-size: 17px;
-  padding: 22px 12px;
+  font-size: 16px;
+  padding: 20px 12px;
   text-align: center;
-  transition: border-color 120ms ease, background 120ms ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.checkpoint-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--marigold), var(--brand-red));
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.checkpoint-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--marigold);
+  background: var(--ink-3);
+  box-shadow: 0 8px 25px rgba(255, 107, 53, 0.15);
+}
+
+.checkpoint-card:hover::before {
+  transform: scaleX(1);
 }
 
 .checkpoint-card.is-selected {
   border-color: var(--marigold);
   background: var(--ink-3);
+  box-shadow: 0 0 15px rgba(255, 107, 53, 0.25);
+}
+
+.checkpoint-card.is-selected::before {
+  transform: scaleX(1);
 }
 
 .device-label-input {
@@ -121,33 +186,57 @@ input:focus-visible {
   flex-direction: column;
   gap: 6px;
   font-size: 13px;
-  color: rgb(247 242 231 / 75%);
+  color: rgb(255 247 237 / 75%);
   margin-bottom: auto;
 }
 
 .device-label-input input {
   background: var(--ink-2);
   border: 1px solid var(--ink-3);
-  border-radius: 10px;
-  padding: 12px 14px;
+  border-radius: 12px;
+  padding: 14px;
   color: var(--paper);
   font-size: 16px;
+  transition: all 0.2s ease;
+}
+
+.device-label-input input:focus {
+  border-color: var(--marigold);
+  background: var(--ink-3);
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.15);
 }
 
 .primary-button {
-  background: var(--marigold);
-  color: var(--ink);
+  background: linear-gradient(135deg, var(--marigold) 0%, var(--brand-red) 100%);
+  color: var(--paper);
   border: none;
-  border-radius: 14px;
-  padding: 18px;
-  font-size: 17px;
+  border-radius: 50px; /* Pill-shaped per styling guide */
+  padding: 16px 28px;
+  font-size: 16px;
   font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
   margin-top: 20px;
+  box-shadow: 0 4px 15px rgba(214, 36, 36, 0.3);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.primary-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(214, 36, 36, 0.5);
+  background: linear-gradient(135deg, var(--marigold-hover) 0%, var(--brand-red-hover) 100%);
+}
+
+.primary-button:active:not(:disabled) {
+  transform: translateY(0);
 }
 
 .primary-button:disabled {
   background: var(--ink-3);
-  color: rgb(247 242 231 / 40%);
+  color: rgb(255 247 237 / 40%);
+  box-shadow: none;
+  transform: none;
 }
 
 /* ---------- Scanner screen ---------- */
@@ -163,26 +252,27 @@ input:focus-visible {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 20px 20px 16px;
+  padding: 16px 20px 12px;
 }
 
 .scanner-header h2 {
   font-family: var(--font-display);
-  font-size: 28px;
+  font-size: 26px;
   margin: 0;
   letter-spacing: 0.01em;
+  color: var(--paper);
 }
 
 .header-actions {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 6px;
+  gap: 4px;
 }
 
 .session-count {
   font-size: 12px;
-  color: rgb(247 242 231 / 60%);
+  color: rgb(255 247 237 / 60%);
 }
 
 .link-button {
@@ -192,6 +282,8 @@ input:focus-visible {
   font-size: 13px;
   font-weight: 700;
   padding: 4px 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .camera-wrap {
@@ -205,6 +297,8 @@ input:focus-visible {
   align-items: center;
   justify-content: center;
   min-height: 320px;
+  border: 2px solid var(--ink-3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
 
 .camera-region {
@@ -222,7 +316,13 @@ input:focus-visible {
   border: 3px solid var(--marigold);
   border-radius: 20px;
   pointer-events: none;
-  box-shadow: 0 0 0 999px rgb(0 0 0 / 35%);
+  box-shadow: 0 0 0 999px rgb(0 0 0 / 40%);
+  animation: reticle-pulse 2s infinite ease-in-out;
+}
+
+@keyframes reticle-pulse {
+  0%, 100% { border-color: var(--marigold); opacity: 0.8; }
+  50% { border-color: var(--brand-red); opacity: 1; }
 }
 
 .scan-hint,
@@ -233,13 +333,15 @@ input:focus-visible {
   right: 16px;
   text-align: center;
   font-size: 14px;
-  background: rgb(16 21 42 / 85%);
+  background: rgba(26, 8, 8, 0.9);
+  border: 1px solid var(--ink-3);
   padding: 10px 14px;
   border-radius: 10px;
 }
 
 .camera-error {
   color: var(--duplicate);
+  border-color: var(--duplicate);
 }
 
 .manual-toggle {
@@ -249,8 +351,9 @@ input:focus-visible {
   text-decoration: underline;
   text-underline-offset: 3px;
   font-size: 14px;
-  padding: 16px 20px 28px;
+  padding: 12px 20px 24px;
   text-align: center;
+  font-weight: 500;
 }
 
 /* ---------- Manual search ---------- */
@@ -271,8 +374,9 @@ input:focus-visible {
 }
 
 .manual-search-header h3 {
-  font-size: 15px;
+  font-size: 16px;
   margin: 0;
+  font-family: var(--font-body);
 }
 
 .manual-search input {
@@ -284,11 +388,19 @@ input:focus-visible {
   font-size: 16px;
   margin-bottom: 12px;
   width: 100%;
+  transition: all 0.2s ease;
+}
+
+.manual-search input:focus {
+  border-color: var(--marigold);
+  background: var(--ink-3);
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.15);
 }
 
 .manual-hint {
   font-size: 13px;
-  color: rgb(247 242 231 / 60%);
+  color: rgb(255 247 237 / 60%);
 }
 
 .manual-results {
@@ -312,10 +424,22 @@ input:focus-visible {
   justify-content: space-between;
   align-items: center;
   color: var(--paper);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.manual-result-row:hover {
+  transform: translateY(-2px);
+  border-color: var(--marigold);
+  background: var(--ink-3);
+  box-shadow: 0 6px 15px rgba(255, 107, 53, 0.1);
 }
 
 .manual-result-row.is-picked {
   border-color: var(--marigold);
+  background: var(--ink-3);
+  box-shadow: 0 0 12px rgba(255, 107, 53, 0.2);
 }
 
 .manual-result-name {
@@ -324,7 +448,7 @@ input:focus-visible {
 
 .manual-result-reg {
   font-size: 12px;
-  color: rgb(247 242 231 / 60%);
+  color: rgb(255 247 237 / 60%);
 }
 
 /* ---------- Result overlay — the signature moment ---------- */
@@ -336,17 +460,19 @@ input:focus-visible {
   align-items: center;
   justify-content: center;
   z-index: 50;
-  background: rgb(0 0 0 / 55%);
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
 }
 
 .result-stamp {
   border: 6px solid var(--paper);
-  border-radius: 18px;
+  border-radius: 24px;
   padding: 36px 40px;
   text-align: center;
   transform: rotate(-3deg) scale(0.9);
   animation: stamp-press 260ms cubic-bezier(0.2, 1.4, 0.4, 1) forwards;
   max-width: 86vw;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
 }
 
 @keyframes stamp-press {
@@ -381,10 +507,10 @@ input:focus-visible {
 
 .result-headline {
   font-family: var(--font-display);
-  font-size: 52px;
+  font-size: 48px;
   letter-spacing: 0.03em;
   color: var(--paper);
-  margin: 0 0 6px;
+  margin: 0 0 8px;
   line-height: 1;
 }
 
@@ -392,12 +518,12 @@ input:focus-visible {
   font-size: 22px;
   font-weight: 800;
   color: var(--paper);
-  margin: 0 0 4px;
+  margin: 0 0 6px;
 }
 
 .result-detail {
   font-size: 14px;
-  color: rgb(247 242 231 / 85%);
+  color: rgb(255 247 237 / 85%);
   margin: 0;
 }
 
@@ -426,19 +552,29 @@ input:focus-visible {
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: radial-gradient(circle at top left, var(--ink-3) 0%, var(--ink) 70%);
+  background: radial-gradient(circle at top left, var(--ink-3) 0%, var(--ink) 80%);
 }
 
 .login-card {
   background: var(--ink-2);
-  border: 1px solid rgba(247, 242, 231, 0.1);
+  border: 1px solid rgba(255, 247, 237, 0.1);
   border-radius: 24px;
   padding: 40px 32px;
   width: 100%;
   max-width: 420px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 
-              0 0 0 1px rgba(240, 166, 58, 0.05);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 
+              0 0 0 1px rgba(255, 107, 53, 0.05);
   animation: login-fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--marigold), var(--brand-red));
 }
 
 @keyframes login-fade-in {
@@ -454,17 +590,17 @@ input:focus-visible {
 
 .login-title {
   font-family: var(--font-display);
-  font-size: 38px;
+  font-size: 34px;
   letter-spacing: 0.02em;
   margin: 8px 0 12px;
-  line-height: 1.1;
+  line-height: 1.2;
   color: var(--paper);
 }
 
 .login-subtitle {
   font-size: 14px;
   line-height: 1.5;
-  color: rgba(247, 242, 231, 0.6);
+  color: rgba(255, 247, 237, 0.6);
   margin-bottom: 32px;
 }
 
@@ -475,7 +611,7 @@ input:focus-visible {
 }
 
 .login-error-box {
-  background: rgba(226, 73, 58, 0.1);
+  background: rgba(214, 36, 36, 0.1);
   border: 1px solid var(--duplicate);
   color: var(--paper);
   border-radius: 12px;
@@ -507,7 +643,7 @@ input:focus-visible {
 }
 
 .input-group input {
-  background: rgba(16, 21, 42, 0.4);
+  background: rgba(26, 8, 8, 0.4);
   border: 1px solid var(--ink-3);
   border-radius: 12px;
   padding: 14px 16px;
@@ -520,23 +656,14 @@ input:focus-visible {
   border-color: var(--marigold);
   background: var(--ink-3);
   outline: none;
-  box-shadow: 0 0 0 4px rgba(240, 166, 58, 0.15);
+  box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.15);
 }
 
 .login-button {
   margin-top: 10px;
   padding: 16px;
-  border-radius: 12px;
+  border-radius: 50px;
   transition: all 0.2s ease;
-}
-
-.login-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(240, 166, 58, 0.25);
-}
-
-.login-button:active:not(:disabled) {
-  transform: translateY(0);
 }
 
 /* ---------- Result Overlay OK button ---------- */
@@ -545,7 +672,7 @@ input:focus-visible {
   background: var(--paper);
   color: var(--ink);
   border: none;
-  border-radius: 12px;
+  border-radius: 50px; /* Pill-shaped */
   padding: 12px 24px;
   font-size: 16px;
   font-weight: 800;
@@ -566,4 +693,10 @@ input:focus-visible {
   transform: scale(0.98);
 }
 
-
+.logout-adjust {
+  margin-top: 24px;
+  text-align: center;
+  width: 100%;
+  font-size: 14px;
+  display: block;
+}

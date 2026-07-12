@@ -1,4 +1,13 @@
 import { useState } from 'react'
+import logo from '../assets/logo.png'
+
+const CREDENTIALS = {
+  entry: 'entry123',
+  plate: 'plate123',
+  drink: 'drink123',
+  chaat: 'chaat123',
+  sweet: 'sweet123'
+}
 
 export default function Login({ onLoginSuccess }) {
   const [username, setUsername] = useState('')
@@ -7,8 +16,9 @@ export default function Login({ onLoginSuccess }) {
 
   function handleSubmit(e) {
     e.preventDefault()
-    if (username === 'system' && password === 'system123') {
-      onLoginSuccess()
+    const lowerUser = username.trim().toLowerCase()
+    if (CREDENTIALS[lowerUser] && CREDENTIALS[lowerUser] === password) {
+      onLoginSuccess(lowerUser)
     } else {
       setError('Invalid username or password')
     }
@@ -17,6 +27,9 @@ export default function Login({ onLoginSuccess }) {
   return (
     <div className="login-screen">
       <div className="login-card">
+        <div className="brand-logo-container">
+          <img src={logo} alt="Club Logo" className="brand-logo" />
+        </div>
         <p className="eyebrow">Attendant Portal</p>
         <h1 className="login-title">Food Pass Scanner</h1>
         <p className="login-subtitle">Sign in to access volunteer scanning checkpoint tools.</p>

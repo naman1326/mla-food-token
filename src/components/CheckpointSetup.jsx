@@ -6,7 +6,7 @@ const CHECKPOINT_MAPPING = {
   entry: 'ENTRY',
   plate: 'PLATE',
   drink: 'DRINK',
-  chaat: 'CHAT',
+  chaat: 'CHAAT',
   sweet: 'SWEET'
 }
 
@@ -17,24 +17,32 @@ export default function CheckpointSetup({ username, onChoose, onLogout }) {
   const [deviceLabel, setDeviceLabel] = useState('')
 
   useEffect(() => {
+    console.log('CheckpointSetup: fetching checkpoints for username:', username)
     fetchCheckpoints()
       .then((data) => {
+        console.log('Fetched checkpoints from DB:', data)
         const formatted = data.map(cp => {
-          if (cp.code === 'CHAT') {
+          const uppercaseCode = cp.code?.trim().toUpperCase()
+          if (uppercaseCode === 'CHAT' || uppercaseCode === 'CHAAT') {
             return { ...cp, label: 'Chaat' }
           }
           return cp
         })
 
-        const allowedCode = CHECKPOINT_MAPPING[username]
-        const filtered = formatted.filter(cp => cp.code === allowedCode)
+        const allowedCode = CHECKPOINT_MAPPING[username]?.trim().toUpperCase()
+        console.log('Allowed code matching username:', allowedCode)
+        const filtered = formatted.filter(cp => cp.code?.trim().toUpperCase() === allowedCode)
+        console.log('Filtered checkpoints:', filtered)
 
         setCheckpoints(filtered)
         if (filtered.length === 1) {
           setSelected(filtered[0])
         }
       })
-      .catch(() => setError('Could not load counters — check your connection and reload'))
+      .catch((err) => {
+        console.error('Error loading checkpoints:', err)
+        setError('Could not load counters — check your connection and reload')
+      })
   }, [username])
 
   function confirm() {

@@ -11,7 +11,7 @@ const CHECKPOINT_MAPPING = {
   entry: 'ENTRY',
   plate: 'PLATE',
   drink: 'DRINK',
-  chaat: 'CHAT',
+  chaat: 'CHAAT',
   sweet: 'SWEET'
 }
 
@@ -29,7 +29,7 @@ export default function App() {
       if (saved) {
         try {
           const parsed = JSON.parse(saved)
-          if (parsed.checkpointCode === CHECKPOINT_MAPPING[authedUser]) {
+          if (parsed.checkpointCode?.trim().toUpperCase() === CHECKPOINT_MAPPING[authedUser]?.trim().toUpperCase()) {
             setSession(parsed)
           } else {
             sessionStorage.removeItem(SESSION_STORAGE_KEY)

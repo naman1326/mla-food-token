@@ -3,6 +3,7 @@ import { recordScan } from '../supabaseClient.js'
 import { interpretScanResult } from '../scanLogic.js'
 import ResultOverlay from './ResultOverlay.jsx'
 import ManualSearch from './ManualSearch.jsx'
+import logo from '../assets/logo.png'
 
 const SCAN_REGION_ID = 'qr-scan-region'
 
@@ -100,6 +101,9 @@ export default function ScannerScreen({ session, onSwitchCheckpoint }) {
 
   return (
     <div className="scanner-screen">
+      <div className="brand-logo-container scanner-logo-adjust">
+        <img src={logo} alt="Club Logo" className="brand-logo" />
+      </div>
       <header className="scanner-header">
         <div>
           <p className="eyebrow">Scanning for</p>

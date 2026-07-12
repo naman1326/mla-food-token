@@ -8,7 +8,7 @@ export function interpretScanResult(response) {
         tone: 'confirm',
         headline: 'CONFIRMED',
         name: response.name,
-        detail: response.checkpoint,
+        detail: response.checkpoint ? response.checkpoint.replace(/\bChat\b/gi, 'Chaat') : '',
       }
     case 'duplicate':
       return {

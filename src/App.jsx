@@ -7,29 +7,47 @@ import { configError } from './supabaseClient.js'
 const SESSION_STORAGE_KEY = 'foodpass_checkpoint_session'
 const AUTH_STORAGE_KEY = 'foodpass_logged_in'
 
+const CHECKPOINT_MAPPING = {
+  entry: 'ENTRY',
+  plate: 'PLATE',
+  drink: 'DRINK',
+  chaat: 'CHAT',
+  sweet: 'SWEET'
+}
+
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(null)
   const [session, setSession] = useState(null) // { checkpointCode, checkpointLabel, deviceLabel }
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
-    const authed = sessionStorage.getItem(AUTH_STORAGE_KEY) === 'true'
-    setIsLoggedIn(authed)
+    const authedUser = sessionStorage.getItem(AUTH_STORAGE_KEY)
+    if (authedUser && CHECKPOINT_MAPPING[authedUser]) {
+      setIsLoggedIn(authedUser)
 
-    const saved = sessionStorage.getItem(SESSION_STORAGE_KEY)
-    if (saved) {
-      try {
-        setSession(JSON.parse(saved))
-      } catch {
-        // corrupt value — ignore and fall through to setup
+      const saved = sessionStorage.getItem(SESSION_STORAGE_KEY)
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved)
+          if (parsed.checkpointCode === CHECKPOINT_MAPPING[authedUser]) {
+            setSession(parsed)
+          } else {
+            sessionStorage.removeItem(SESSION_STORAGE_KEY)
+            setSession(null)
+          }
+        } catch {
+          // corrupt value — ignore and fall through to setup
+        }
       }
+    } else {
+      setIsLoggedIn(null)
     }
     setReady(true)
   }, [])
 
-  const handleLoginSuccess = useCallback(() => {
-    sessionStorage.setItem(AUTH_STORAGE_KEY, 'true')
-    setIsLoggedIn(true)
+  const handleLoginSuccess = useCallback((username) => {
+    sessionStorage.setItem(AUTH_STORAGE_KEY, username)
+    setIsLoggedIn(username)
   }, [])
 
   const chooseCheckpoint = useCallback((checkpointCode, checkpointLabel, deviceLabel) => {
@@ -40,7 +58,9 @@ export default function App() {
 
   const switchCheckpoint = useCallback(() => {
     sessionStorage.removeItem(SESSION_STORAGE_KEY)
+    sessionStorage.removeItem(AUTH_STORAGE_KEY)
     setSession(null)
+    setIsLoggedIn(null)
   }, [])
 
   if (configError) {
@@ -61,7 +81,7 @@ export default function App() {
   return session ? (
     <ScannerScreen session={session} onSwitchCheckpoint={switchCheckpoint} />
   ) : (
-    <CheckpointSetup onChoose={chooseCheckpoint} />
+    <CheckpointSetup username={isLoggedIn} onChoose={chooseCheckpoint} onLogout={switchCheckpoint} />
   )
 }
 

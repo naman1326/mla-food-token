@@ -512,6 +512,8 @@ input:focus-visible {
   color: var(--paper);
   margin: 0 0 8px;
   line-height: 1;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .result-name {
@@ -519,12 +521,38 @@ input:focus-visible {
   font-weight: 800;
   color: var(--paper);
   margin: 0 0 6px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .result-detail {
   font-size: 14px;
   color: rgb(255 247 237 / 85%);
   margin: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 639px) {
+  .result-stamp {
+    padding: 24px 20px;
+    border-width: 4px;
+    border-radius: 16px;
+  }
+  .result-headline {
+    font-size: 32px;
+  }
+  .result-name {
+    font-size: 18px;
+  }
+  .result-detail {
+    font-size: 13px;
+  }
+  .overlay-dismiss-button {
+    margin-top: 16px;
+    padding: 10px 20px;
+    font-size: 14px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -14,7 +14,9 @@ export default function CheckpointSetup({ username, onChoose, onLogout }) {
   const [checkpoints, setCheckpoints] = useState(null)
   const [error, setError] = useState(null)
   const [selected, setSelected] = useState(null)
-  const [deviceLabel, setDeviceLabel] = useState('')
+  const [deviceLabel, setDeviceLabel] = useState(() => {
+    return localStorage.getItem('foodpass_device_label') || ''
+  })
 
   useEffect(() => {
     console.log('CheckpointSetup: fetching checkpoints for username:', username)
@@ -46,8 +48,10 @@ export default function CheckpointSetup({ username, onChoose, onLogout }) {
   }, [username])
 
   function confirm() {
-    if (!selected) return
-    onChoose(selected.code, selected.label, deviceLabel.trim() || null)
+    if (!selected || !deviceLabel.trim()) return
+    const trimmedLabel = deviceLabel.trim()
+    localStorage.setItem('foodpass_device_label', trimmedLabel)
+    onChoose(selected.code, selected.label, trimmedLabel)
   }
 
   return (
@@ -77,17 +81,23 @@ export default function CheckpointSetup({ username, onChoose, onLogout }) {
       )}
 
       <label className="device-label-input">
-        Label this device (optional)
+        Label this device
         <input
           type="text"
-          placeholder="e.g. Backup 1"
+          placeholder="e.g. Backup 1 (required)"
           value={deviceLabel}
           onChange={(e) => setDeviceLabel(e.target.value)}
           maxLength={30}
+          required
         />
       </label>
 
-      <button type="button" className="primary-button" disabled={!selected} onClick={confirm}>
+      <button
+        type="button"
+        className="primary-button"
+        disabled={!selected || !deviceLabel.trim()}
+        onClick={confirm}
+      >
         Start scanning
       </button>
 

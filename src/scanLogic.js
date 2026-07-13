@@ -7,42 +7,42 @@ export function interpretScanResult(response) {
       return {
         tone: 'confirm',
         headline: 'CONFIRMED',
-        name: response.name,
+        reg_no: response.reg_no,
         detail: response.checkpoint ? response.checkpoint.replace(/\bChat\b/gi, 'Chaat') : '',
       }
     case 'duplicate':
       return {
         tone: 'duplicate',
         headline: 'ALREADY SCANNED',
-        name: response.name,
+        reg_no: response.reg_no,
         detail: formatScanTime(response.scanned_at),
       }
     case 'invalid_token':
       return {
         tone: 'error',
         headline: 'NOT FOUND',
-        name: null,
+        reg_no: null,
         detail: "This code isn't in the system",
       }
     case 'invalid_checkpoint':
       return {
         tone: 'error',
         headline: 'COUNTER ERROR',
-        name: null,
+        reg_no: null,
         detail: 'Tell the organizer — checkpoint not recognized',
       }
     case 'network_error':
       return {
         tone: 'error',
         headline: 'NO CONNECTION',
-        name: null,
+        reg_no: null,
         detail: 'Check your signal and try again',
       }
     default:
       return {
         tone: 'error',
         headline: 'SOMETHING WENT WRONG',
-        name: null,
+        reg_no: null,
         detail: 'Try scanning again',
       }
   }

@@ -31,6 +31,16 @@ export async function recordScan(token, checkpointCode, method = 'qr', deviceLab
     console.error('record_scan error:', error)
     return { status: 'network_error' }
   }
+  if (data && (data.status === 'confirmed' || data.status === 'duplicate')) {
+    const { data: part, error: partError } = await supabase
+      .from('participants')
+      .select('reg_no')
+      .eq('token', token)
+      .maybeSingle()
+    if (!partError && part) {
+      data.reg_no = part.reg_no
+    }
+  }
   return data
 }
 

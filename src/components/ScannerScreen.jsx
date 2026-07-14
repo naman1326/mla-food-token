@@ -42,7 +42,13 @@ export default function ScannerScreen({ session, onSwitchCheckpoint }) {
       }
     }
 
-    const token = decodedText.trim()
+    let token = decodedText.trim()
+
+    // Check if the QR code is a full URL, and extract only the token
+    if (token.includes("?t=")) {
+      token = token.split("?t=")[1]
+    }
+
     const response = await recordScan(
       token,
       sessionRef.current.checkpointCode,
@@ -89,7 +95,7 @@ export default function ScannerScreen({ session, onSwitchCheckpoint }) {
         current
           .stop()
           .then(() => current.clear())
-          .catch(() => {})
+          .catch(() => { })
       }
     }
   }, [manualMode, handleDecoded])

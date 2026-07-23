@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { recordScan } from '../supabaseClient.js'
-import { interpretScanResult } from '../scanLogic.js'
+import { interpretScanResult, extractToken } from '../scanLogic.js'
 import ResultOverlay from './ResultOverlay.jsx'
 import ManualSearch from './ManualSearch.jsx'
 import logo from '../assets/logo.png'
@@ -42,12 +42,7 @@ export default function ScannerScreen({ session, onSwitchCheckpoint }) {
       }
     }
 
-    let token = decodedText.trim()
-
-    // Check if the QR code is a full URL, and extract only the token
-    if (token.includes("?t=")) {
-      token = token.split("?t=")[1]
-    }
+    const token = extractToken(decodedText)
 
     const response = await recordScan(
       token,
@@ -100,9 +95,24 @@ export default function ScannerScreen({ session, onSwitchCheckpoint }) {
     }
   }, [manualMode, handleDecoded])
 
-  function handleManualConfirm(token) {
+  async function handleManualConfirm(regNo) {
     setManualMode(false)
-    handleDecoded(token)
+
+    const response = await recordScan(
+      "",
+      sessionRef.current.checkpointCode,
+      "manual",
+      sessionRef.current.deviceLabel,
+      regNo
+    )
+
+    const interpreted = interpretScanResult(response)
+
+    setResult(interpreted)
+
+    if (interpreted.tone === "confirm") {
+      setSessionCount(n => n + 1)
+    }
   }
 
   return (

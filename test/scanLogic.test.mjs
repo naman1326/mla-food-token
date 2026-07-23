@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { interpretScanResult, formatScanTime } from '../src/scanLogic.js'
+import { interpretScanResult, formatScanTime, extractToken } from '../src/scanLogic.js'
 
 let passed = 0
 function check(label, actual, expected) {
@@ -71,5 +71,9 @@ check(
   interpretScanResult({ status: 'confirmed', reg_no: '23BCS001', checkpoint: 'Chat' }),
   { tone: 'confirm', headline: 'CONFIRMED', reg_no: '23BCS001', detail: 'Chaat' }
 )
+
+check('extractToken from simple string', extractToken(' 23BCS001 '), '23BCS001')
+check('extractToken from URL with ?t=', extractToken('https://example.com/pass?t=ABC1234&src=qr'), 'ABC1234')
+check('extractToken from URL with ?token=', extractToken('https://example.com/pass?token=XYZ9999'), 'XYZ9999')
 
 console.log(`\n${passed}/${passed} checks passed`)

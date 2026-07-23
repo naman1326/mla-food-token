@@ -53,10 +53,10 @@ export default function ManualSearch({ onConfirm, onCancel }) {
 
       <ul className="manual-results">
         {results.map((p) => (
-          <li key={p.token}>
+          <li key={p.reg_no}>
             <button
               type="button"
-              className={`manual-result-row ${picked?.token === p.token ? 'is-picked' : ''}`}
+              className={`manual-result-row ${picked?.reg_no === p.reg_no ? 'is-picked' : ''}`}
               onClick={() => setPicked(p)}
             >
               <span className="manual-result-name">{p.name}</span>
@@ -70,7 +70,7 @@ export default function ManualSearch({ onConfirm, onCancel }) {
         type="button"
         className="primary-button"
         disabled={!picked}
-        onClick={() => picked && onConfirm(picked.token)}
+        onClick={() => picked && onConfirm(picked.reg_no)}
       >
         {picked ? `Confirm for ${picked.name}` : 'Pick someone above'}
       </button>

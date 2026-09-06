@@ -10,9 +10,9 @@ const AUTH_STORAGE_KEY = 'foodpass_logged_in'
 const CHECKPOINT_MAPPING = {
   entry: 'ENTRY',
   plate: 'PLATE',
-  drink: 'DRINK',
-  chaat: 'CHAAT',
-  sweet: 'SWEET'
+  modak: 'MODAK',
+  malpua: 'MALPUA',
+  malpoha: 'MALPUA'
 }
 
 export default function App() {
@@ -29,10 +29,13 @@ export default function App() {
       if (saved) {
         try {
           const parsed = JSON.parse(saved)
-          if (
-            parsed.checkpointCode?.trim().toUpperCase() === CHECKPOINT_MAPPING[authedUser]?.trim().toUpperCase() &&
-            parsed.deviceLabel?.trim()
-          ) {
+          const expectedCode = CHECKPOINT_MAPPING[authedUser]?.trim().toUpperCase()
+          const parsedCode = parsed.checkpointCode?.trim().toUpperCase()
+          const codeMatches =
+            parsedCode === expectedCode ||
+            (expectedCode === 'MALPUA' && parsedCode === 'MALPOHA')
+
+          if (codeMatches && parsed.deviceLabel?.trim()) {
             setSession(parsed)
           } else {
             sessionStorage.removeItem(SESSION_STORAGE_KEY)

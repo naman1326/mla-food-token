@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import logo from '../assets/logo.png'
+import { entryIcon, plateIcon, modakIcon, malpuaIcon } from '../counterIcons.js'
 
 const CREDENTIALS = {
   entry: 'entry123',
   plate: 'plate123',
-  drink: 'drink123',
-  chaat: 'chaat123',
-  sweet: 'sweet123'
+  modak: 'modak123',
+  malpua: 'malpua123',
+  malpoha: 'malpua123'
 }
 
 export default function Login({ onLoginSuccess }) {
@@ -16,8 +17,10 @@ export default function Login({ onLoginSuccess }) {
 
   function handleSubmit(e) {
     e.preventDefault()
-    const lowerUser = username.trim().toLowerCase()
-    if (CREDENTIALS[lowerUser] && CREDENTIALS[lowerUser] === password) {
+    let lowerUser = username.trim().toLowerCase()
+    if (lowerUser === 'malpoha') lowerUser = 'malpua'
+    const expectedPassword = CREDENTIALS[lowerUser]
+    if (expectedPassword && (password === expectedPassword || (lowerUser === 'malpua' && password === 'malpoha123'))) {
       onLoginSuccess(lowerUser)
     } else {
       setError('Invalid username or password')
@@ -33,6 +36,24 @@ export default function Login({ onLoginSuccess }) {
         <p className="eyebrow">Attendant Portal</p>
         <h1 className="login-title">Food Pass Scanner</h1>
         <p className="login-subtitle">Sign in to access volunteer scanning checkpoint tools.</p>
+        <div className="login-counter-chips" aria-label="Available Counters">
+          <div className="counter-chip">
+            <img src={entryIcon} alt="" />
+            <span>Entry</span>
+          </div>
+          <div className="counter-chip">
+            <img src={plateIcon} alt="" />
+            <span>Plate</span>
+          </div>
+          <div className="counter-chip">
+            <img src={modakIcon} alt="" />
+            <span>Modak</span>
+          </div>
+          <div className="counter-chip">
+            <img src={malpuaIcon} alt="" />
+            <span>Malpua</span>
+          </div>
+        </div>
 
         <form onSubmit={handleSubmit} className="login-form">
           {error && <div className="login-error-box">{error}</div>}

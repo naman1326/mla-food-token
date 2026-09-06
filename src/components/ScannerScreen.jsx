@@ -4,6 +4,7 @@ import { interpretScanResult, extractToken } from '../scanLogic.js'
 import ResultOverlay from './ResultOverlay.jsx'
 import ManualSearch from './ManualSearch.jsx'
 import logo from '../assets/logo.png'
+import { getCounterIcon } from '../counterIcons.js'
 
 const SCAN_REGION_ID = 'qr-scan-region'
 
@@ -123,7 +124,16 @@ export default function ScannerScreen({ session, onSwitchCheckpoint }) {
       <header className="scanner-header">
         <div>
           <p className="eyebrow">Scanning for</p>
-          <h2>{session.checkpointLabel}</h2>
+          <h2 className="scanner-title-with-icon">
+            {getCounterIcon(session?.checkpointCode || session?.checkpointLabel) && (
+              <img
+                src={getCounterIcon(session?.checkpointCode || session?.checkpointLabel)}
+                alt=""
+                className="scanner-counter-emoji"
+              />
+            )}
+            <span>{session.checkpointLabel}</span>
+          </h2>
         </div>
         <div className="header-actions">
           <span className="session-count">{sessionCount} scanned</span>

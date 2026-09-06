@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react'
 import { fetchCheckpoints } from '../supabaseClient.js'
 import logo from '../assets/logo.png'
+import { getCounterIcon } from '../counterIcons.js'
 
 const CHECKPOINT_MAPPING = {
   entry: 'ENTRY',
   plate: 'PLATE',
-  drink: 'DRINK',
-  chaat: 'CHAAT',
-  sweet: 'SWEET'
+  modak: 'MODAK',
+  malpua: 'MALPUA',
+  malpoha: 'MALPUA'
 }
 
 export default function CheckpointSetup({ username, onChoose, onLogout }) {
@@ -19,25 +20,30 @@ export default function CheckpointSetup({ username, onChoose, onLogout }) {
   })
 
   useEffect(() => {
-    console.log('CheckpointSetup: fetching checkpoints for username:', username)
     fetchCheckpoints()
       .then((data) => {
-        console.log('Fetched checkpoints from DB:', data)
-        const formatted = data.map(cp => {
-          const uppercaseCode = cp.code?.trim().toUpperCase()
-          if (uppercaseCode === 'CHAT' || uppercaseCode === 'CHAAT') {
-            return { ...cp, label: 'Chaat' }
-          }
-          return cp
-        })
+        const expectedCode = (CHECKPOINT_MAPPING[username] || username)?.trim().toUpperCase()
 
-        const allowedCode = CHECKPOINT_MAPPING[username]?.trim().toUpperCase()
-        console.log('Allowed code matching username:', allowedCode)
-        const filtered = formatted.filter(cp => cp.code?.trim().toUpperCase() === allowedCode)
-        console.log('Filtered checkpoints:', filtered)
+        // Filter strictly to the logged-in attendant's assigned counter
+        const filtered = (data || [])
+          .filter((cp) => {
+            const code = cp.code?.trim().toUpperCase()
+            if (expectedCode === 'MALPUA') {
+              return code === 'MALPUA' || code === 'MALPOHA'
+            }
+            return code === expectedCode
+          })
+          .map((cp) => {
+            if (cp.code?.trim().toUpperCase() === 'MALPOHA') {
+              return { ...cp, code: 'MALPUA', label: 'Malpua' }
+            }
+            return cp
+          })
 
-        setCheckpoints(filtered)
-        if (filtered.length === 1) {
+        if (filtered.length === 0) {
+          setError(`No counter found for "${username}". Please ensure the database has counter code "${expectedCode}".`)
+        } else {
+          setCheckpoints(filtered)
           setSelected(filtered[0])
         }
       })
@@ -67,16 +73,20 @@ export default function CheckpointSetup({ username, onChoose, onLogout }) {
 
       {checkpoints && (
         <div className="checkpoint-grid">
-          {checkpoints.map((cp) => (
-            <button
-              key={cp.code}
-              type="button"
-              className={`checkpoint-card ${selected?.code === cp.code ? 'is-selected' : ''}`}
-              onClick={() => setSelected(cp)}
-            >
-              {cp.label}
-            </button>
-          ))}
+          {checkpoints.map((cp) => {
+            const icon = getCounterIcon(cp.code || cp.label)
+            return (
+              <button
+                key={cp.code}
+                type="button"
+                className={`checkpoint-card ${selected?.code === cp.code ? 'is-selected' : ''}`}
+                onClick={() => setSelected(cp)}
+              >
+                {icon && <img src={icon} alt="" className="checkpoint-icon-emoji" />}
+                <span className="checkpoint-label-text">{cp.label}</span>
+              </button>
+            )
+          })}
         </div>
       )}
 

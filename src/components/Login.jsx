@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import logo from '../assets/logo.png'
-import { entryIcon, plateIcon, modakIcon, malpuaIcon } from '../counterIcons.js'
+import { entryIcon, plateIcon, sweetIcon, drinkIcon } from '../counterIcons.js'
 
 const CREDENTIALS = {
   entry: 'entry123',
   plate: 'plate123',
+  sweet: 'sweet123',
+  drink: 'drink123',
   modak: 'modak123',
   malpua: 'malpua123',
   malpoha: 'malpua123'
@@ -46,12 +48,12 @@ export default function Login({ onLoginSuccess }) {
             <span>Plate</span>
           </div>
           <div className="counter-chip">
-            <img src={modakIcon} alt="" />
-            <span>Modak</span>
+            <img src={sweetIcon} alt="" />
+            <span>Sweet</span>
           </div>
           <div className="counter-chip">
-            <img src={malpuaIcon} alt="" />
-            <span>Malpua</span>
+            <img src={drinkIcon} alt="" />
+            <span>Drink</span>
           </div>
         </div>
 

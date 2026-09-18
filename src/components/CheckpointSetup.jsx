@@ -6,6 +6,8 @@ import { getCounterIcon } from '../counterIcons.js'
 const CHECKPOINT_MAPPING = {
   entry: 'ENTRY',
   plate: 'PLATE',
+  sweet: 'SWEET',
+  drink: 'DRINK',
   modak: 'MODAK',
   malpua: 'MALPUA',
   malpoha: 'MALPUA'
@@ -30,6 +32,15 @@ export default function CheckpointSetup({ username, onChoose, onLogout }) {
             const code = cp.code?.trim().toUpperCase()
             if (expectedCode === 'MALPUA') {
               return code === 'MALPUA' || code === 'MALPOHA'
+            }
+            if (expectedCode === 'SWEET') {
+              return code === 'SWEET' || code === 'MODAK' || code === 'MALPUA' || code === 'MALPOHA'
+            }
+            if (expectedCode === 'DRINK') {
+              return code === 'DRINK' || code === 'BEVERAGE'
+            }
+            if (expectedCode === 'MODAK') {
+              return code === 'MODAK' || code === 'SWEET'
             }
             return code === expectedCode
           })

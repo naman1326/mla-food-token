@@ -1,14 +1,16 @@
 import entryIcon from './assets/entry.png'
 import plateIcon from './assets/plate.png'
-import modakIcon from './assets/modak.png'
-import malpuaIcon from './assets/malpua.png'
+import sweetIcon from './assets/sweet.png'
+import drinkIcon from './assets/drink.png'
 
 export const COUNTER_ICONS = {
   ENTRY: entryIcon,
   PLATE: plateIcon,
-  MODAK: modakIcon,
-  MALPUA: malpuaIcon,
-  MALPOHA: malpuaIcon,
+  SWEET: sweetIcon,
+  DRINK: drinkIcon,
+  MODAK: sweetIcon,
+  MALPUA: sweetIcon,
+  MALPOHA: sweetIcon,
 }
 
 export function getCounterIcon(codeOrLabel) {
@@ -17,9 +19,9 @@ export function getCounterIcon(codeOrLabel) {
   if (COUNTER_ICONS[key]) return COUNTER_ICONS[key]
   if (key.includes('ENTRY')) return entryIcon
   if (key.includes('PLATE') || key.includes('DISH')) return plateIcon
-  if (key.includes('MODAK')) return modakIcon
-  if (key.includes('MALPUA') || key.includes('MALPOHA')) return malpuaIcon
+  if (key.includes('SWEET') || key.includes('MODAK') || key.includes('MALPUA') || key.includes('MALPOHA')) return sweetIcon
+  if (key.includes('DRINK') || key.includes('BEVERAGE') || key.includes('WATER') || key.includes('JUICE')) return drinkIcon
   return null
 }
 
-export { entryIcon, plateIcon, modakIcon, malpuaIcon }
+export { entryIcon, plateIcon, sweetIcon, drinkIcon, sweetIcon as modakIcon, sweetIcon as malpuaIcon }

@@ -10,6 +10,8 @@ const AUTH_STORAGE_KEY = 'foodpass_logged_in'
 const CHECKPOINT_MAPPING = {
   entry: 'ENTRY',
   plate: 'PLATE',
+  sweet: 'SWEET',
+  drink: 'DRINK',
   modak: 'MODAK',
   malpua: 'MALPUA',
   malpoha: 'MALPUA'
@@ -33,7 +35,9 @@ export default function App() {
           const parsedCode = parsed.checkpointCode?.trim().toUpperCase()
           const codeMatches =
             parsedCode === expectedCode ||
-            (expectedCode === 'MALPUA' && parsedCode === 'MALPOHA')
+            (expectedCode === 'MALPUA' && parsedCode === 'MALPOHA') ||
+            (expectedCode === 'SWEET' && (parsedCode === 'SWEET' || parsedCode === 'MODAK' || parsedCode === 'MALPUA' || parsedCode === 'MALPOHA')) ||
+            (expectedCode === 'DRINK' && (parsedCode === 'DRINK' || parsedCode === 'BEVERAGE'))
 
           if (codeMatches && parsed.deviceLabel?.trim()) {
             setSession(parsed)

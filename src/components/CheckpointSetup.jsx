@@ -4,6 +4,8 @@ import logo from '../assets/logo.png'
 import { getCounterIcon } from '../counterIcons.js'
 
 const CHECKPOINT_MAPPING = {
+  food: 'FOOD',
+  food123: 'FOOD',
   entry: 'ENTRY',
   plate: 'PLATE',
   sweet: 'SWEET',
@@ -30,6 +32,9 @@ export default function CheckpointSetup({ username, onChoose, onLogout }) {
         const filtered = (data || [])
           .filter((cp) => {
             const code = cp.code?.trim().toUpperCase()
+            if (expectedCode === 'FOOD' || expectedCode === 'FOOD123') {
+              return code === 'FOOD' || code.includes('FOOD')
+            }
             if (expectedCode === 'MALPUA') {
               return code === 'MALPUA' || code === 'MALPOHA'
             }
@@ -51,11 +56,13 @@ export default function CheckpointSetup({ username, onChoose, onLogout }) {
             return cp
           })
 
-        if (filtered.length === 0) {
+        const activeCounters = filtered.length > 0 ? filtered : (data && data.length === 1 ? data : [])
+
+        if (activeCounters.length === 0) {
           setError(`No counter found for "${username}". Please ensure the database has counter code "${expectedCode}".`)
         } else {
-          setCheckpoints(filtered)
-          setSelected(filtered[0])
+          setCheckpoints(activeCounters)
+          setSelected(activeCounters[0])
         }
       })
       .catch((err) => {

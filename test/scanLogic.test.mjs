@@ -17,6 +17,12 @@ check(
 )
 
 check(
+  'confirmed scan for Food',
+  interpretScanResult({ status: 'confirmed', reg_no: '23BCS002', checkpoint: 'Food' }),
+  { tone: 'confirm', headline: 'CONFIRMED', reg_no: '23BCS002', detail: 'Food' }
+)
+
+check(
   'duplicate scan carries the original time',
   interpretScanResult({
     status: 'duplicate',

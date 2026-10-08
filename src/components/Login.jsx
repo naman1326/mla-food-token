@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import logo from '../assets/logo.png'
-import { entryIcon, plateIcon, sweetIcon, drinkIcon } from '../counterIcons.js'
+import { foodIcon, entryIcon, plateIcon, sweetIcon, drinkIcon } from '../counterIcons.js'
 
 const CREDENTIALS = {
+  food123: 'Qwert1326',
+  food: 'Qwert1326',
   entry: 'entry123',
   plate: 'plate123',
   sweet: 'sweet123',
@@ -40,20 +42,8 @@ export default function Login({ onLoginSuccess }) {
         <p className="login-subtitle">Sign in to access volunteer scanning checkpoint tools.</p>
         <div className="login-counter-chips" aria-label="Available Counters">
           <div className="counter-chip">
-            <img src={entryIcon} alt="" />
-            <span>Entry</span>
-          </div>
-          <div className="counter-chip">
-            <img src={plateIcon} alt="" />
-            <span>Plate</span>
-          </div>
-          <div className="counter-chip">
-            <img src={sweetIcon} alt="" />
-            <span>Sweet</span>
-          </div>
-          <div className="counter-chip">
-            <img src={drinkIcon} alt="" />
-            <span>Drink</span>
+            <img src={foodIcon} alt="" />
+            <span>Food</span>
           </div>
         </div>
 

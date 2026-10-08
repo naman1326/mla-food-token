@@ -2,8 +2,11 @@ import entryIcon from './assets/entry.png'
 import plateIcon from './assets/plate.png'
 import sweetIcon from './assets/sweet.png'
 import drinkIcon from './assets/drink.png'
+import foodIcon from './assets/food.png'
 
 export const COUNTER_ICONS = {
+  FOOD: foodIcon,
+  FOOD123: foodIcon,
   ENTRY: entryIcon,
   PLATE: plateIcon,
   SWEET: sweetIcon,
@@ -14,14 +17,16 @@ export const COUNTER_ICONS = {
 }
 
 export function getCounterIcon(codeOrLabel) {
-  if (!codeOrLabel) return null
+  if (!codeOrLabel) return foodIcon
   const key = String(codeOrLabel).trim().toUpperCase()
   if (COUNTER_ICONS[key]) return COUNTER_ICONS[key]
+  if (key.includes('FOOD')) return foodIcon
   if (key.includes('ENTRY')) return entryIcon
   if (key.includes('PLATE') || key.includes('DISH')) return plateIcon
   if (key.includes('SWEET') || key.includes('MODAK') || key.includes('MALPUA') || key.includes('MALPOHA')) return sweetIcon
   if (key.includes('DRINK') || key.includes('BEVERAGE') || key.includes('WATER') || key.includes('JUICE')) return drinkIcon
-  return null
+  return foodIcon
 }
 
-export { entryIcon, plateIcon, sweetIcon, drinkIcon, sweetIcon as modakIcon, sweetIcon as malpuaIcon }
+export { foodIcon, entryIcon, plateIcon, sweetIcon, drinkIcon, sweetIcon as modakIcon, sweetIcon as malpuaIcon }
+
